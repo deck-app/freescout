@@ -1,6 +1,7 @@
 version: '3'
 volumes:
   fs_logs:
+  db:
 services:
   
   freescout-app:
@@ -33,7 +34,7 @@ services:
     command: --transaction-isolation=READ-COMMITTED --binlog-format=ROW
     restart: unless-stopped
     volumes:
-      - ${MYSQL_PATH_HOST}:/var/lib/mysql
+      - db:/var/lib/mysql
     environment:
       - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASSWORD}
       - MYSQL_PASSWORD=${DB_PASSWORD}
