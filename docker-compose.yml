@@ -6,7 +6,7 @@ services:
   freescout-app:
     image: tiredofit/freescout
     links:
-    - db
+    - mariadb
     volumes:
       - ${DATA_PATH_HOST}:/data
       - fs_logs:/www/logs
