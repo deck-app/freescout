@@ -1,0 +1,41 @@
+version: '3'
+volumes:
+  fs_logs:
+services:
+  
+  freescout-app:
+    image: tiredofit/freescout
+    links:
+    - db
+    volumes:
+      - ${DATA_PATH_HOST}:/data
+      - fs_logs:/www/logs
+    ports:
+      - ${FREESCOUT_HTTP_PORT}:80
+    environment:
+    - VIRTUAL_HOST=localhost
+    - VIRTUAL_NETWORK=nginx-proxy
+    - VIRTUAL_PORT=80
+    - LETSENCRYPT_HOST=localhost
+    - LETSENCRYPT_EMAIL=${ADMIN_EMAIL}
+    - DB_HOST=mariadb
+    - DB_NAME=${DB_NAME}
+    - DB_USER=${DB_USER}
+    - DB_PASS=${DB_PASSWORD}
+    - SITE_URL=http://localhost
+    - ADMIN_EMAIL=${ADMIN_EMAIL}
+    - ADMIN_PASS=${ADMIN_PASS}
+    - DISPLAY_ERRORS=FALSE
+    - TIMEZONE=Europe/Isle_of_Man
+    restart: unless-stopped
+  mariadb:
+    image: mariadb
+    command: --transaction-isolation=READ-COMMITTED --binlog-format=ROW
+    restart: unless-stopped
+    volumes:
+      - ${MYSQL_PATH_HOST}:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASSWORD}
+      - MYSQL_PASSWORD=${DB_PASSWORD}
+      - MYSQL_DATABASE=${DB_NAME}
+      - MYSQL_USER=${DB_USER}
